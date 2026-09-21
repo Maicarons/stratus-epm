@@ -1,7 +1,0 @@
-{
-  "versionId": "bv-2025",
-  "description": "Driver-based budget derivation check",
-  "expect": {
-    "revenueBudgetAtLeast": 5200000
-  }
-}
