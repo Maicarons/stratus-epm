@@ -1,0 +1,41 @@
+{
+  "name": "stratus-epm",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Stratus EPM — open-source group financial consolidation, budgeting and management reporting platform",
+  "license": "Apache-2.0",
+  "author": "Stratus EPM Contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stratus-epm/stratus-epm.git"
+  },
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "docs"
+  ],
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm --parallel -r dev",
+    "dev:api": "pnpm --filter @stratus/api dev",
+    "dev:web": "pnpm --filter @stratus/web dev",
+    "dev:docs": "pnpm --filter @stratus/docs dev",
+    "test": "pnpm --filter @stratus/core test",
+    "seed": "pnpm --filter @stratus/api seed",
+    "start:api": "pnpm --filter @stratus/api start",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint --if-present"
+  },
+  "keywords": [
+    "epm",
+    "financial-consolidation",
+    "budgeting",
+    "management-reporting",
+    "open-source",
+    "group-finance"
+  ]
+}
