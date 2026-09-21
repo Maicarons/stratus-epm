@@ -1,0 +1,16 @@
+{
+  "name": "@stratus/docs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Stratus EPM documentation (VitePress)",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev --port 5174",
+    "build": "vitepress build",
+    "preview": "vitepress preview --port 5174"
+  },
+  "devDependencies": {
+    "vitepress": "^1.5.0"
+  }
+}
