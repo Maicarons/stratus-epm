@@ -133,9 +133,12 @@
 
 ## 7. Definition of Done（版本）
 
-- [ ] `pnpm test` 通过  
-- [ ] `pnpm seed && pnpm dev:api` 可访问 `/api/health`  
-- [ ] Web 可展示合并与预算结果  
-- [ ] docs 构建成功  
-- [ ] CHANGELOG / 版本号更新  
-- [ ] LICENSE 保持 Apache-2.0  
+- [x] `pnpm test` 通过（18 tests）
+- [x] `pnpm seed && pnpm dev:api` 可访问 `/api/health`
+- [x] Web 可展示合并与预算结果
+- [x] docs 构建成功（中文 + English）
+- [x] CHANGELOG / 版本号更新
+- [x] LICENSE 保持 Apache-2.0
+- [x] 文档支持中英双语（VitePress locales）
+
+> 完成度说明：v0.1 DoD 已全部勾选；v0.2+ 见上文 backlog。
