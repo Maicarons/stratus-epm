@@ -1,0 +1,212 @@
+/**
+ * Stratus EPM demo group: "华衡集团" (fictional)
+ * Holdings in CNY with a HK subsidiary in HKD to exercise FX + IC elimination.
+ */
+import type { Dataset } from '@stratus/schema';
+
+export function createDemoDataset(): Dataset {
+  return {
+    architectures: [
+      { id: 'arch-legal', name: '法定合并架构', kind: 'legal', groupCurrency: 'CNY' },
+      { id: 'arch-mgmt', name: '管理架构-制造业板块', kind: 'management', groupCurrency: 'CNY' },
+    ],
+    entities: [
+      {
+        id: 'e-hq',
+        code: 'HH',
+        name: '华衡集团（母公司）',
+        parentId: null,
+        ownershipPct: 1,
+        consolidateMethod: 'full',
+        functionalCurrency: 'CNY',
+        architectureId: 'arch-legal',
+        isConsolidationNode: true,
+        activeFrom: '2020-01-01',
+      },
+      {
+        id: 'e-mfg',
+        code: 'HH-MFG',
+        name: '华衡制造有限公司',
+        parentId: 'e-hq',
+        ownershipPct: 1,
+        consolidateMethod: 'full',
+        functionalCurrency: 'CNY',
+        architectureId: 'arch-legal',
+        isConsolidationNode: false,
+        activeFrom: '2020-01-01',
+      },
+      {
+        id: 'e-sales',
+        code: 'HH-SALES',
+        name: '华衡销售有限公司',
+        parentId: 'e-hq',
+        ownershipPct: 0.8,
+        consolidateMethod: 'full',
+        functionalCurrency: 'CNY',
+        architectureId: 'arch-legal',
+        isConsolidationNode: false,
+        activeFrom: '2021-01-01',
+      },
+      {
+        id: 'e-hk',
+        code: 'HH-HK',
+        name: 'Huaheng HK Limited',
+        parentId: 'e-mfg',
+        ownershipPct: 1,
+        consolidateMethod: 'full',
+        functionalCurrency: 'HKD',
+        architectureId: 'arch-legal',
+        isConsolidationNode: false,
+        activeFrom: '2022-06-01',
+      },
+    ],
+    accounts: [
+      { code: '1001', name: '货币资金', type: 'asset', sign: 1, isMonetary: true },
+      { code: '1122', name: '应收账款', type: 'asset', sign: 1, isMonetary: true },
+      { code: '1401', name: '存货', type: 'asset', sign: 1, isMonetary: false },
+      { code: '1601', name: '固定资产', type: 'asset', sign: 1, isMonetary: false },
+      { code: '2202', name: '应付账款', type: 'liability', sign: 1, isMonetary: true },
+      { code: '2241', name: '其他应付款-内部', type: 'liability', sign: 1, isMonetary: true },
+      { code: '4001', name: '实收资本', type: 'equity', sign: 1, isMonetary: false },
+      { code: '4103', name: '未分配利润', type: 'equity', sign: 1, isMonetary: false },
+      { code: '6001', name: '主营业务收入', type: 'revenue', sign: 1, isMonetary: false },
+      { code: '6401', name: '主营业务成本', type: 'expense', sign: 1, isMonetary: false },
+      { code: '6602', name: '管理费用', type: 'expense', sign: 1, isMonetary: false },
+      { code: '6901', name: '内部交易抵消', type: 'equity', sign: 1, isMonetary: false },
+    ],
+    accountMaps: [
+      { id: 'm1', entityCode: 'HH-HK', sourceAccount: 'AR', groupAccount: '1122', sourceSystem: 'local' },
+      { id: 'm2', entityCode: 'HH-HK', sourceAccount: 'AP_IC', groupAccount: '2241', sourceSystem: 'local' },
+      { id: 'm3', entityCode: 'HH-HK', sourceAccount: 'REV', groupAccount: '6001', sourceSystem: 'local' },
+      { id: 'm4', entityCode: 'HH-HK', sourceAccount: 'CASH', groupAccount: '1001', sourceSystem: 'local' },
+    ],
+    facts: [
+      // HH parent
+      f('HH', '2025-01', '1001', 12_000_000, 'CNY'),
+      f('HH', '2025-01', '1122', 3_000_000, 'CNY', 'HH-SALES'),
+      f('HH', '2025-01', '4001', 10_000_000, 'CNY'),
+      f('HH', '2025-01', '4103', 5_000_000, 'CNY'),
+      f('HH', '2025-01', '2202', 200_000, 'CNY'),
+      f('HH', '2025-01', '6001', 800_000, 'CNY'),
+      f('HH', '2025-01', '6401', 500_000, 'CNY'),
+      // MFG
+      f('HH-MFG', '2025-01', '1001', 4_500_000, 'CNY'),
+      f('HH-MFG', '2025-01', '1401', 2_800_000, 'CNY'),
+      f('HH-MFG', '2025-01', '1601', 6_200_000, 'CNY'),
+      f('HH-MFG', '2025-01', '1122', 1_200_000, 'CNY', 'HH-HK'),
+      f('HH-MFG', '2025-01', '2241', 0, 'CNY', 'HH-HK'),
+      f('HH-MFG', '2025-01', '4001', 8_000_000, 'CNY'),
+      f('HH-MFG', '2025-01', '4103', 4_500_000, 'CNY'),
+      f('HH-MFG', '2025-01', '6001', 5_200_000, 'CNY', 'HH-HK'),
+      f('HH-MFG', '2025-01', '6401', 3_600_000, 'CNY'),
+      f('HH-MFG', '2025-01', '6602', 400_000, 'CNY'),
+      // SALES (80%)
+      f('HH-SALES', '2025-01', '1001', 2_100_000, 'CNY'),
+      f('HH-SALES', '2025-01', '1122', 900_000, 'CNY'),
+      f('HH-SALES', '2025-01', '2202', 350_000, 'CNY', 'HH'),
+      f('HH-SALES', '2025-01', '4001', 2_000_000, 'CNY'),
+      f('HH-SALES', '2025-01', '4103', 500_000, 'CNY'),
+      f('HH-SALES', '2025-01', '6001', 3_100_000, 'CNY'),
+      f('HH-SALES', '2025-01', '6401', 2_400_000, 'CNY'),
+      f('HH-SALES', '2025-01', '6602', 180_000, 'CNY'),
+      // HK in HKD — will translate
+      f('HH-HK', '2025-01', 'CASH', 800_000, 'HKD'),
+      f('HH-HK', '2025-01', 'AR', 420_000, 'HKD', 'HH-MFG'),
+      f('HH-HK', '2025-01', 'AP_IC', 420_000, 'HKD', 'HH-MFG'),
+      f('HH-HK', '2025-01', 'REV', 1_100_000, 'HKD'),
+      f('HH-HK', '2025-01', '4001', 500_000, 'HKD'),
+    ],
+    journals: [
+      {
+        id: 'j1',
+        entityCode: 'HH-MFG',
+        period: '2025-01',
+        account: '6602',
+        dims: { department: 'HQ' },
+        scenario: 'actual',
+        currency: 'CNY',
+        amount: 50_000,
+        entryType: 'audit',
+        memo: '审计调整-管理费用',
+        createdAt: new Date().toISOString(),
+      },
+    ],
+    fxRates: [
+      { base: 'HKD', quote: 'CNY', rateType: 'average', period: '2025-01', rate: 0.92 },
+      { base: 'HKD', quote: 'CNY', rateType: 'closing', period: '2025-01', rate: 0.91 },
+    ],
+    eliminationRules: [
+      {
+        id: 'el-ic-ar',
+        name: '内部往来抵消',
+        sourceAccounts: ['1122', '2241', '2202'],
+        method: 'net_change',
+        eliminationAccount: '6901',
+        entryType: 'intercompany_bv',
+        active: true,
+      },
+      {
+        id: 'el-ic-pl',
+        name: '内部销售抵消',
+        sourceAccounts: ['6001'],
+        method: 'net_change',
+        eliminationAccount: '6901',
+        entryType: 'intercompany_pl',
+        active: true,
+      },
+    ],
+    allocationRules: [
+      {
+        id: 'alloc-hq',
+        name: '总部管理费用分摊',
+        poolAccount: '6602',
+        targetAccounts: ['6401', '6001'],
+        driverKey: '6001',
+        basis: 'ratio',
+      },
+    ],
+    budgetVersions: [
+      { id: 'bv-2025', name: '2025年度预算', fiscalYear: '2025', status: 'approved' },
+      { id: 'bv-2025-r1', name: '2025滚动预测R1', fiscalYear: '2025', status: 'draft', basedOnVersionId: 'bv-2025' },
+    ],
+    budgetDrivers: [
+      { id: 'd1', entityCode: 'HH-MFG', period: '2025-01', versionId: 'bv-2025', key: 'volume', dims: { product: 'A' }, value: 10_000 },
+      { id: 'd2', entityCode: 'HH-MFG', period: '2025-02', versionId: 'bv-2025', key: 'volume', dims: { product: 'A' }, value: 12_000 },
+      { id: 'd3', entityCode: 'HH-SALES', period: '2025-01', versionId: 'bv-2025', key: 'volume', dims: { channel: 'direct' }, value: 5_000 },
+      { id: 'd4', entityCode: 'HH-MFG', period: '2025-01', versionId: 'bv-2025', key: 'headcount', dims: { department: 'admin' }, value: 40 },
+    ],
+    budgetFormulas: [
+      { id: 'f1', name: '制造销量→收入', targetAccount: '6001', driverKey: 'volume', rate: 520, versionId: 'bv-2025', entityCode: 'HH-MFG', dims: { product: 'A' } },
+      { id: 'f2', name: '制造销量→成本', targetAccount: '6401', driverKey: 'volume', rate: 360, versionId: 'bv-2025', entityCode: 'HH-MFG', dims: { product: 'A' } },
+      { id: 'f3', name: '销售销量→收入', targetAccount: '6001', driverKey: 'volume', rate: 620, versionId: 'bv-2025', entityCode: 'HH-SALES', dims: { channel: 'direct' } },
+      { id: 'f4', name: '人数→管理费用', targetAccount: '6602', driverKey: 'headcount', rate: 8_000, versionId: 'bv-2025', entityCode: 'HH-MFG', dims: { department: 'admin' } },
+    ],
+    kpis: [
+      { id: 'kpi-rev', name: '营业收入', numerator: ['6001'], op: 'sum' },
+      { id: 'kpi-gp', name: '毛利', numerator: ['6001'], denominator: [], op: 'sum' },
+      { id: 'kpi-gm', name: '毛利率', numerator: ['6001'], denominator: ['6001'], op: 'ratio' },
+    ],
+  };
+}
+
+function f(
+  entityCode: string,
+  period: string,
+  account: string,
+  amount: number,
+  currency: string,
+  tradingPartner?: string,
+) {
+  return {
+    id: `fact_${entityCode}_${account}_${period}_${tradingPartner ?? 'x'}`,
+    entityCode,
+    period,
+    account,
+    dims: {},
+    scenario: 'actual' as const,
+    currency,
+    amount,
+    source: 'seed',
+    tradingPartner: tradingPartner ?? null,
+  };
+}
