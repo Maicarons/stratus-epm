@@ -1,0 +1,8 @@
+{
+  "period": "2025-01",
+  "description": "Baseline consolidation demo for Huaheng Group",
+  "expect": {
+    "eliminationCountGreaterThan": 0,
+    "cashGreaterThan": 19000000
+  }
+}
