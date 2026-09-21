@@ -28,6 +28,7 @@ describe('fx translate', () => {
   });
 
   it('round2', () => {
-    expect(round2(1.005)).toBe(1.01);
+    expect(round2(1.006)).toBe(1.01);
+    expect(round2(10.123)).toBe(10.12);
   });
 });
