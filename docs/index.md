@@ -4,9 +4,13 @@
 
 从这里开始：
 
-- [项目方案](/guide/project-plan) — 产品定位、功能地图、商业模式与创意设计
+- [项目方案](/guide/project-plan) — 产品定位、功能地图、创意设计
 - [开发计划](/guide/dev-plan) — 里程碑、任务拆解、质量门禁
 - [快速开始](/guide/quickstart) — 本地运行 API / Web / 文档
 - [合并引擎](/guide/consolidation) — 计算流水线与数据模型
+- [数据模型](/guide/data-model) · [FAQ](/guide/faq) · [路线图](/guide/roadmap)
+- [开发手册索引](/guide/handbook-index) · [ADR 索引](/guide/adr-index)
+
+**English documentation**: [docs/en](/en/)
 
 > License: Apache-2.0
